@@ -1,0 +1,5 @@
+accelerate
+beautifulsoup4
+requests
+torch
+transformers
