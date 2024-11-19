@@ -1,1 +1,1 @@
-# hate-speech-mitigation
+# hate-speech-detection-and-mitigation
