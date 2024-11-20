@@ -5,10 +5,7 @@ from ._load_terminators import _load_terminators
 def get_model_response(
     model_name: str,
     system_prompt: str,
-    user_prompt: str,
-    do_sample: bool=False,
-    temperature: float=1.0,
-    top_p: float=0.0
+    user_prompt: str
     ) -> str:
     """ load llm
 
@@ -38,9 +35,9 @@ def get_model_response(
         prompt,
         max_new_tokens=TOKEN_LENGTH_LIMIT,
         eos_token_id=_load_terminators(model_name=model_name, pipeline=pipeline),
-        do_sample=do_sample,
-        temperature=temperature,
-        top_p=top_p
+        do_sample=True,
+        temperature=0.6,
+        top_p=0.9
     )
 
     return outputs[0]['generated_text'][len(prompt):]

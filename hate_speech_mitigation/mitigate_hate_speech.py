@@ -19,10 +19,7 @@ def mitigate_hate_speech(
         system_prompt=load_prompt(role='system', task=task),
         user_prompt=load_prompt(role='user', task=task).format(
             hate_speech=hate_speech
-        ),
-        do_sample=True,
-        temperature=0.6,
-        top_p=0.9
+        )
     )
 
     return mitigated_hate_speech
