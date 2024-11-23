@@ -1,4 +1,6 @@
 accelerate
+bs4
 selenium
 torch
 transformers
+webdriver-manager
