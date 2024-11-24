@@ -14,6 +14,9 @@ def _load_pipeline(
     [Return]
     pipeline : transformers.Pipeline
     """
+    if model_name in PIPELINE_BUFFER:
+        return PIPELINE_BUFFER[model_name]
+
     if model_name == 'Bllossom-ELO':
         pipeline = transformers.pipeline(
             task='text-generation',
@@ -23,5 +26,10 @@ def _load_pipeline(
         )
         
         pipeline.model.eval()
-
+    
+    PIPELINE_BUFFER[model_name] = pipeline
     return pipeline
+
+
+if __name__ == 'hate_speech_mitigation.utils._load_pipeline':
+    PIPELINE_BUFFER = dict()

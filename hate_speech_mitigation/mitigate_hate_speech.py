@@ -1,3 +1,4 @@
+import transformers
 from hate_speech_mitigation.utils import get_model_response, load_prompt
 from typing import List
 
@@ -19,11 +20,13 @@ def mitigate_hate_speech(
         hate_speech: str,
         labels: List[str],
         rationales: List[List[int]]
-    ):
+    ) -> str:
     """ mitigate hate speech
 
-    [Param]
+    [Params]
     hate_speech : str
+    labels      : List[str]
+    rationales  : List[List[int]]
 
     [Return]
     mitigated_hate_speech : str

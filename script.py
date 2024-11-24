@@ -2,6 +2,7 @@ import argparse
 import re
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium_recaptcha_solver import RecaptchaSolver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -19,10 +20,8 @@ def import_driver():
     webdriver_options.add_argument('--disable-dev-shm-usage')
     webdriver_options.add_argument('--disable-gpu')
     webdriver_options.add_argument('--disable-blink-features=AutomationControlled')
-    webdriver_options.add_argument('--disable-web-security')
-    webdriver_options.add_argument('--allow-running-insecure-content')
     webdriver_options.add_argument(
-        '--user_agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+        '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
     )
 
     webdriver_options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -53,6 +52,7 @@ if __name__ == '__main__':
     everytime_password = '00donguk00@#'
 
     driver = import_driver()
+    solver = RecaptchaSolver(driver=driver)
     print("[Done ] initialize driver.")
 
     # Check url
@@ -67,11 +67,24 @@ if __name__ == '__main__':
     driver.get(f'https://account.everytime.kr/login?redirect_uri=https%3A%2F%2Feverytime.kr%2F{group}%2Fv%2F{article}')
     print(driver.current_url)
     print(driver.get_log("browser"))
-    print(driver.page_source)
 
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "id"))).send_keys(everytime_id)
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "password"))).send_keys(everytime_password)
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@type='submit']"))).click()
+    id_field = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.NAME, "id"))
+    )
+    id_field.send_keys(everytime_id)
+
+    password_field = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.NAME, "password"))
+    )
+    password_field.send_keys(everytime_password)
+
+    login_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//input[@type='submit']"))
+    )
+    login_button.click()
+
+    with open('temp3.txt', 'w') as file:
+        file.write(str(driver.page_source))
 
     print("[Done ] Login.")
     print(driver.current_url)
