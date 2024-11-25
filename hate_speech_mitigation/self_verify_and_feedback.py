@@ -20,7 +20,7 @@ def self_verify_and_feedback(
     """
     task = 'self_verify_and_feedback'
 
-    response = get_model_response(
+    instruction, response = get_model_response(
         model_name='Bllossom-ELO',
         system_prompt=load_prompt(role='system', task=task),
         user_prompt=load_prompt(role='user', task=task).format(
@@ -35,6 +35,6 @@ def self_verify_and_feedback(
     if match:
         verification_flag = True if match.group(1) == '참' else False if match.group(2) == '거짓' else None
         feedback = match.group(2)
-        return verification_flag, feedback, response
+        return verification_flag, feedback, instruction, response
     
-    return None, None, response
+    return None, None, instruction, response

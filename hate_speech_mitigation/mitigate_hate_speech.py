@@ -21,7 +21,7 @@ def mitigate_hate_speech(
     if feedback == '':
         task = 'mitigate_hate_speech'
 
-        response = get_model_response(
+        instruction, response = get_model_response(
             model_name='Bllossom-ELO',
             system_prompt=load_prompt(role='system', task=task),
             user_prompt=load_prompt(role='user', task=task).format(
@@ -33,7 +33,7 @@ def mitigate_hate_speech(
     else:
         task = 'mitigate_hate_speech_with_feedback'
 
-        response = get_model_response(
+        instruction, response = get_model_response(
             model_name='Bllossom-ELO',
             system_prompt=load_prompt(role='system', task=task),
             user_prompt=load_prompt(role='user', task=task).format(
@@ -45,4 +45,4 @@ def mitigate_hate_speech(
 
     mitigated_speech = response.replace('**완화된 문장:**\n', '')
 
-    return mitigated_speech, response
+    return mitigated_speech, instruction, response

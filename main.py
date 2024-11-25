@@ -10,7 +10,7 @@ def step_2_hate_speech_mitigation(
         rationales: List[List[int]]
     ):
     """main"""
-    buffer = []
+    buffer = [{'step': [0, 'initialization'], 'original_speech': original_speech}]
 
     verification_flag, iteration, feedback = False, 0, ''
     while not verification_flag and iteration < 3:
@@ -21,31 +21,31 @@ def step_2_hate_speech_mitigation(
         # Step - mitigate hate speech with feedback
         logger.info("> mitigate hate speech")
 
-        mitigated_speech, response = mitigate_hate_speech(
+        mitigated_speech, instruction, response = mitigate_hate_speech(
             original_speech=original_speech,
             rationales=rationales,
             feedback=feedback # empty string at first iteration
         )
 
-        buffer.append({'step': [iteration, 'mitigate_hate_speech'], 'response': response})
+        buffer.append({'step': [iteration, 'mitigate_hate_speech'], 'instruction': instruction, 'response': response})
         logger.info(f">> Original speech : {original_speech}")
         logger.info(f">> Mitigated speech: {mitigated_speech}")
 
         # Step - self verify and feedback
         logger.info("> self verify and feedback")
 
-        verification_flag, feedback, response = self_verify_and_feedback(
+        verification_flag, feedback, instruction, response = self_verify_and_feedback(
             original_speech=original_speech,
             mitigated_speech=mitigated_speech
         )
 
-        buffer.append({'step': [iteration, 'self_verify_and_feedback'], 'response': response})
+        buffer.append({'step': [iteration, 'self_verify_and_feedback'], 'instruction': instruction, 'response': response})
         logger.info(f">> Verification    : {verification_flag}")
         logger.info(f">> Feedback        : {feedback}")
     
     logger.info("Iteration done.")
-    with open('hate_speech_mitigation/buffer.json', 'w') as file:
-        json.dump(buffer, file)
+    with open('hate_speech_mitigation/buffer.json', 'w', encoding='utf-8') as file:
+        json.dump(buffer, file, ensure_ascii=False, indent=4)
     
     return mitigated_speech
 

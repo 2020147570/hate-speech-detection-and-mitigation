@@ -1,12 +1,13 @@
 from ._load_pipeline import _load_pipeline
 from ._load_terminators import _load_terminators
+from typing import Tuple
 
 
 def get_model_response(
     model_name: str,
     system_prompt: str,
     user_prompt: str
-    ) -> str:
+    ) -> Tuple[str, str]:
     """ load llm
 
     [Params]
@@ -18,7 +19,8 @@ def get_model_response(
     top_p         : float (default: 0.0)
 
     [Return]
-    response : str
+    instruction : str
+    response    : str
     """
     pipeline = _load_pipeline(model_name=model_name)
 
@@ -40,7 +42,7 @@ def get_model_response(
         top_p=0.9
     )
 
-    return outputs[0]['generated_text'][len(prompt):]
+    return outputs[0]['generated_text'][:len(prompt)], outputs[0]['generated_text'][len(prompt):]
 
 
 if __name__ == 'hate_speech_mitigation.utils._get_model_response':
