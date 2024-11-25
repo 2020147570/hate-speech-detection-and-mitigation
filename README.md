@@ -5,7 +5,7 @@
 ## .gitignore
 
     .gitignore
-    *__pycache__
+    *__pycache__*
     *buffer*
     *temp*
 
