@@ -22,9 +22,9 @@ def import_driver():
     webdriver_options.add_argument(
         '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
     )
-
     webdriver_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     webdriver_options.add_experimental_option('useAutomationExtension', False)
+    webdriver_options.set_capability('goog:loggingPrefs', {'browser': 'ALL'})
     
     driver = webdriver.Chrome(options=webdriver_options, service=Service(ChromeDriverManager().install()))
     driver.implicitly_wait(10)
@@ -47,7 +47,6 @@ if __name__ == '__main__':
 
     everytime_id = 'go2033302'
     everytime_password = '00donguk00@#'
-    ANTICAPTCHA_API_KEY = 'a710d056b34ea7edf41c75df097ae37f'
 
     driver = import_driver()
     print("[Done ] initialize driver.")

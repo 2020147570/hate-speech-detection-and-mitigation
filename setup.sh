@@ -12,17 +12,18 @@ echo "Installing Google Chrome..."
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O google-chrome-stable.deb
 apt install -y ./google-chrome-stable.deb
 rm google-chrome-stable.deb
-echo "Installed Google Chrome version: ${google-chrome --version}"
+echo "Installed Google Chrome version: $(google-chrome --version)"
 
 # 3. Install ChromeDriver
 echo "Installing ChromeDriver..."
 CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
-wget https://chromedriver.storage.googleapis.com/${CHROME_VERSION}.0/chromedriver_linux64.zip -O chromedriver.zip
+CHROMEDRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_$CHROME_VERSION")
+wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$CHROMEDRIVER_VERSION/linux64/chromedriver-linux64.zip -O chromedriver.zip
 unzip chromedriver.zip
-mv chromedriver /usr/local/bin/
+mv chromedriver-linux64/chromedriver /usr/local/bin/
 chmod +x /usr/local/bin/chromedriver
-rm chromedriver.zip
-echo "Installed ChromeDriver verision: ${chromedriver --version}"
+rm -rf chromedriver.zip chromedriver-linux64
+echo "Installed ChromeDriver verision: $(chromedriver --version)"
 
 # 4. Install requirements
 echo "Installing requirements..."
