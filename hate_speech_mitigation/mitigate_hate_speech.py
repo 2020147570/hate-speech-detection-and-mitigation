@@ -1,46 +1,48 @@
-import transformers
-from hate_speech_mitigation.utils import get_model_response, load_prompt
-from typing import List
-
-
-MATCHES = {
-    'gender': '성별',
-    'age': '나이',
-    'race': '인종',
-    'religion': '지역',
-    'politics': '정치',
-    'job': '직업',
-    'disability': '무능',
-    'individual': '개인',
-    'others': '기타'
-}
+from .utils import get_model_response, load_prompt
+from typing import List, Tuple
 
 
 def mitigate_hate_speech(
-        hate_speech: str,
-        labels: List[str],
-        rationales: List[List[int]]
-    ) -> str:
+        original_speech: str,
+        rationales: List[List[int]],
+        feedback: str=''
+    ) -> Tuple[str, str]:
     """ mitigate hate speech
 
     [Params]
-    hate_speech : str
-    labels      : List[str]
-    rationales  : List[List[int]]
+    original_speech : str
+    rationales      : List[List[int]]
+    feedback        : str (default '')
 
     [Return]
-    mitigated_hate_speech : str
+    mitigated_speech : str
+    response         : str
     """
-    task = 'mitigate_hate_speech'
+    if feedback == '':
+        task = 'mitigate_hate_speech'
 
-    mitigated_hate_speech = get_model_response(
-        model_name='Bllossom-ELO',
-        system_prompt=load_prompt(role='system', task=task),
-        user_prompt=load_prompt(role='user', task=task).format(
-            hate_speech=hate_speech,
-            labels=', '.join([MATCHES[l] for l in labels]),
-            rationales=', '.join(hate_speech[span[0]:span[1]+1] for span in rationales)
+        response = get_model_response(
+            model_name='Bllossom-ELO',
+            system_prompt=load_prompt(role='system', task=task),
+            user_prompt=load_prompt(role='user', task=task).format(
+                original_speech=original_speech,
+                rationales=', '.join(original_speech[span[0]:span[1]+1] for span in rationales)
+            )
         )
-    )
+    
+    else:
+        task = 'mitigate_hate_speech_with_feedback'
 
-    return mitigated_hate_speech
+        response = get_model_response(
+            model_name='Bllossom-ELO',
+            system_prompt=load_prompt(role='system', task=task),
+            user_prompt=load_prompt(role='user', task=task).format(
+                original_speech=original_speech,
+                rationales=', '.join(original_speech[span[0]:span[1]+1] for span in rationales),
+                feedback=feedback
+            )
+        )
+
+    mitigated_speech = response.replace('**완화된 문장:**\n', '')
+
+    return mitigated_speech, response

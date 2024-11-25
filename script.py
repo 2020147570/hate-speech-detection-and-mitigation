@@ -2,7 +2,6 @@ import argparse
 import re
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium_recaptcha_solver import RecaptchaSolver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -44,20 +43,18 @@ def import_driver():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-url', type=str, required=True, help='everytime post url')
-    args, _ = parser.parse_known_args()
+    URL = 'https://everytime.kr/370438/v/361066893'
 
     everytime_id = 'go2033302'
     everytime_password = '00donguk00@#'
+    ANTICAPTCHA_API_KEY = 'a710d056b34ea7edf41c75df097ae37f'
 
     driver = import_driver()
-    solver = RecaptchaSolver(driver=driver)
     print("[Done ] initialize driver.")
 
     # Check url
     pattern = r'^https://everytime\.kr/(\d+)/v/(\d+)$'
-    match = re.match(pattern, args.url)
+    match = re.match(pattern, URL)
     if not match:
         print("[Error] unvalid url."); exit()
     else:

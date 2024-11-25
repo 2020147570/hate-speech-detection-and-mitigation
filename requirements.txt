@@ -1,6 +1,7 @@
 accelerate
 bs4
 selenium
+selenium-stealth
 torch
 transformers
 webdriver-manager
